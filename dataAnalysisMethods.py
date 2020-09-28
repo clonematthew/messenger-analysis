@@ -28,7 +28,7 @@ def dailyMessagesRollingAverage(window, dataFrame):
     # Returning the averaged dataframe
     return rollingAverage
 
-# Function to split data into the two senders
+# Function to split the dataFrame between the two senders
 def splitSenders(dataFrame):
 
     # Getting the names of each sender
@@ -38,5 +38,29 @@ def splitSenders(dataFrame):
     participantOne = dataFrame[dataFrame["Sender"] == names[0]]
     participantTwo = dataFrame[dataFrame["Sender"] == names[1]]
 
-    # Returning the new separated dataFrames
+    # Returning the split dataFrames
     return participantOne, participantTwo
+
+# Function to analyse the ratio of messages sent per person
+def senderAnalysis(participantOne, participantTwo):
+
+    # Finding the % of messages sent by participantOne
+    percentage = (len(participantOne) / (len(participantOne) + len(participantTwo))) * 100
+
+    # Counting the number of messages sent by each person per day
+    participantOneCount = countDailyMessages(participantOne)
+    participantTwoCount = countDailyMessages(participantTwo)
+
+    # Creating a new array with the ratio between senders per day
+    participantOneCount["Ratio"] = participantOneCount["Count"] / (participantOneCount["Count"] + participantTwoCount["Count"])
+
+    # Creating a new array with dates and ratio
+    senderRatioByDay = participantOneCount
+    del senderRatioByDay["Count"]
+    senderRatioByDay["Ratio"] = senderRatioByDay["Ratio"] * 100
+
+    # Filling all NaN values with 0
+    senderRatioByDay = senderRatioByDay.where(pd.notnull(senderRatioByDay), 0)
+  
+    # Returning the percentage, ratio dataFrame, and name of person who the dataFrame give the ratio for 
+    return percentage, senderRatioByDay, names[0]
