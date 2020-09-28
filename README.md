@@ -17,3 +17,7 @@ Currently the program is capable of turning a jumble of .json files into a singl
 4. Analyse the content of the messages; most common words, phrases etc 
 5. Emoji analysis?
 6. Display multiple sets of data on a single graph (e.g messages shared with 2,3 + people per day graph)
+7. Number of words per message
+8. Average number of messages per day
+9. Analyse how the number of messages relates to the day of the week
+10. Sentiment analysis?
