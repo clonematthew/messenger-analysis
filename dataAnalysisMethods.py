@@ -38,8 +38,8 @@ def splitSenders(dataFrame):
     participantOne = dataFrame[dataFrame["Sender"] == names[0]]
     participantTwo = dataFrame[dataFrame["Sender"] == names[1]]
 
-    # Returning the split dataFrames
-    return participantOne, participantTwo
+    # Returning the split dataFrames and the coressponding names
+    return participantOne, names[0], participantTwo, names[1]
 
 # Function to analyse the ratio of messages sent per person
 def senderAnalysis(participantOne, participantTwo):
@@ -62,5 +62,5 @@ def senderAnalysis(participantOne, participantTwo):
     # Filling all NaN values with 0
     senderRatioByDay = senderRatioByDay.where(pd.notnull(senderRatioByDay), 0)
   
-    # Returning the percentage, ratio dataFrame, and name of person who the dataFrame give the ratio for 
-    return percentage, senderRatioByDay, names[0]
+    # Returning the percentage and the ratio dataFrame
+    return percentage, senderRatioByDay
