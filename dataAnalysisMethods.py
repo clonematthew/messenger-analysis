@@ -27,3 +27,16 @@ def dailyMessagesRollingAverage(window, dataFrame):
 
     # Returning the averaged dataframe
     return rollingAverage
+
+# Function to split data into the two senders
+def splitSenders(dataFrame):
+
+    # Getting the names of each sender
+    names = dataFrame(["Sender"]).unique()
+
+    # Splitting dataFrame based on sender
+    participantOne = dataFrame[dataFrame["Sender"] == names[0]]
+    participantTwo = dataFrame[dataFrame["Sender"] == names[1]]
+
+    # Returning the new separated dataFrames
+    return participantOne, participantTwo
