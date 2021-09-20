@@ -1,36 +1,50 @@
-''' Python Script to Import and Analyse Facebook Messenger Data '''
+# Importing public libraries
+import pathlib
+import os
 
-# Importing necessary libraries
-from createCSV import createCSV
-from importData import importCSV
-from dataAnalysisMethods import *
+# Importing functions
+from readJSONs import readJSONs
+from importCSV import importCSVdata
+from analysisMethods import *
 
-''' Part 1: Joining the multiple json files 
-            together and building them into 
-            one csv file '''
+# Getting the directory
+directory = pathlib.Path(__file__).parent.absolute()
 
-# Imported function to generate CSV files
-createCSV()
+# Checking if the JSON files need importing
+jsonCheck = input("Do CSV files need creation? [y/n]: ")
+if jsonCheck == "y":
+    readJSONs(directory)
+else: 
+    pass
 
-''' Part 2: Functions to import the data
-            from the CSV files and then
-            perform analysis on them '''
+# Opening the csv file directory and finding out how many files are in there
+allCSVS = os.listdir(os.path.join(directory, "CSV Files"))
 
-csvFile = r'C:\Users\Matth\Desktop\messagesProject\Tom.csv'
+# Allowing the user to choose which to analyse
+print("\nCSV Files Available for Analysis: ")
+for i in range(len(allCSVS)):
+    print("[%s]: %s" % (i+1, allCSVS[i][:-4]))
 
-# Imported function to import CSV file and create a DataFrame
-dataFrame = importCSV(csvFile)
+csvChoice = input("Type ID of File: ")
 
-dailyData = countDailyMessages(dataFrame)
-averagedData = dailyMessagesRollingAverage(28, dailyData)
+# Setting the csv file according to the choice
+chosenCSV = os.path.join(directory, "CSV Files", allCSVS[int(csvChoice)-1])
 
-import matplotlib.pyplot as plt
+# Running the data analysis script
+csvDataFrame = importCSVdata(chosenCSV)
+while True:
+    # Asking what type of analysis to carry ot
+    print("\nChoose what analyses to perform:")
+    print("[1]: Messages per day over time")
+    print("[2]: General statistics")
+    analysisChoice = input("Analysis: ")
 
-plt.bar(dailyData.index.values, dailyData["Count"], color="grey", label="Raw Data")
-plt.plot(dailyData.index.values, averagedData["Count"], "r-", label="Rolling Average")
-plt.xlabel("Date")
-plt.ylabel("Number of Messages")
-plt.title("Number of Messages exchanged per Day")
-plt.xticks(rotation=75)
-plt.legend()
-plt.show()
+    # Running the desired analysis
+    if analysisChoice == "1":
+        messagesPerDay(csvDataFrame, directory)
+    elif analysisChoice == "2":
+        statsAnalysis(csvDataFrame)
+    else:
+        pass
+
+    
